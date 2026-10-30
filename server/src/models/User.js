@@ -21,14 +21,17 @@ const userSchema = new mongoose.Schema(
     },
     hostelBlock: { type: String, trim: true, maxlength: 40 },
     roomNumber: { type: String, trim: true, maxlength: 20 },
+    // Increased on logout. Tokens carrying an older number stop working.
+    tokenVersion: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
 
-// Never leak the hash if a user document is converted to JSON by mistake
+// Never leak private fields if a user document is converted to JSON by mistake
 userSchema.set('toJSON', {
   transform: (doc, ret) => {
     delete ret.passwordHash;
+    delete ret.tokenVersion;
     delete ret.__v;
     return ret;
   },
