@@ -9,6 +9,7 @@ import { csrfGuard } from './middleware/csrf.js';
 import { notFound, errorHandler } from './middleware/errorHandler.js';
 import authRoutes from './routes/authRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import complaintRoutes from './routes/complaintRoutes.js';
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use('/api', generalLimiter);
 app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
 app.use('/api', csrfGuard);
+app.use('/api/complaints', complaintRoutes);
 
 const dbStates = ['disconnected', 'connected', 'connecting', 'disconnecting'];
 

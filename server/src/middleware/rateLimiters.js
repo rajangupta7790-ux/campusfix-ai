@@ -14,3 +14,10 @@ const make = (options) =>
 
 export const generalLimiter = make({ windowMs: 15 * 60 * 1000, limit: 300 });
 export const authLimiter = make({ windowMs: 15 * 60 * 1000, limit: 20 });
+
+// Limits how many complaints one user can create. Also protects AI usage later.
+export const createComplaintLimiter = make({
+  windowMs: 60 * 60 * 1000,
+  limit: 10,
+  keyGenerator: (req) => String(req.user._id),
+});
