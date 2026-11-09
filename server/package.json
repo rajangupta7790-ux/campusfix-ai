@@ -9,7 +9,8 @@
     "start": "node src/server.js",
     "test": "vitest run",
     "check:models": "node src/scripts/modelCheck.js",
-    "seed:admin": "node src/seedAdmin.js"
+    "seed:admin": "node src/seedAdmin.js",
+    "check:ai": "node src/scripts/aiCheck.js"
   },
   "keywords": [],
   "author": "",

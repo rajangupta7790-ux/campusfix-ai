@@ -3,6 +3,7 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { validate } from '../middleware/validate.js';
 import { authenticate, authorize } from '../middleware/auth.js';
 import { idParamsSchema } from '../validators/common.js';
+import { aiRetryLimiter } from '../middleware/rateLimiters.js';
 import {
   adminListQuerySchema,
   statusChangeSchema,
@@ -16,8 +17,10 @@ import {
   classify,
   assignees,
   stats,
+  aiRetry,
 } from '../controllers/adminController.js';
 import { ROLES } from '../utils/constants.js';
+
 
 const router = Router();
 
@@ -50,5 +53,11 @@ router.patch(
 
 router.get('/assignees', asyncHandler(assignees));
 router.get('/stats', asyncHandler(stats));
+router.post(
+  '/complaints/:id/ai-retry',
+  aiRetryLimiter,
+  validate({ params: idParamsSchema }),
+  asyncHandler(aiRetry)
+);
 
 export default router;

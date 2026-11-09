@@ -21,3 +21,10 @@ export const createComplaintLimiter = make({
   limit: 10,
   keyGenerator: (req) => String(req.user._id),
 });
+
+// Admin retries call the paid AI, so keep them limited per admin
+export const aiRetryLimiter = make({
+  windowMs: 60 * 60 * 1000,
+  limit: 20,
+  keyGenerator: (req) => String(req.user._id),
+});

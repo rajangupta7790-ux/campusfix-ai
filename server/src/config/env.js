@@ -13,6 +13,19 @@ const envSchema = z.object({
     .string()
     .regex(/^\d+[smhd]$/, 'Use a format like 15m, 12h or 7d')
     .default('7d'),
+
+  // AI. The key is optional: without it, complaints still work and AI is marked failed.
+  GEMINI_API_KEY: z
+    .string()
+    .trim()
+    .optional()
+    .transform((v) => v || undefined),
+  GEMINI_MODEL: z.string().trim().min(1).default('gemini-3.8-flash'),
+  GEMINI_TIMEOUT_MS: z.coerce.number().int().min(1000).max(60000).default(10000),
+  AI_ENABLED: z
+    .enum(['true', 'false'])
+    .default('true')
+    .transform((v) => v === 'true'),
 });
 
 const result = envSchema.safeParse(process.env);

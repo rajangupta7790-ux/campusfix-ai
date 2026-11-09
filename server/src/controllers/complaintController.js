@@ -1,10 +1,18 @@
 import * as service from '../services/complaintService.js';
+import { analyzeAndStore } from '../services/aiService.js';
 import { serializeComplaint } from '../utils/serializers.js';
 import { ROLES } from '../utils/constants.js';
+import { env } from '../config/env.js';
+
+// Fire and forget. analyzeAndStore never throws, so the response is never affected.
+function startAnalysis(complaintId) {
+  if (env.AI_ENABLED) void analyzeAndStore(complaintId);
+}
 
 export async function createComplaint(req, res) {
   const complaint = await service.createComplaint(req.user, req.validated.body);
   res.status(201).json({ success: true, data: { complaint: serializeComplaint(complaint) } });
+  startAnalysis(complaint._id);
 }
 
 export async function listMine(req, res) {
@@ -24,6 +32,8 @@ export async function getOne(req, res) {
 export async function updateOne(req, res) {
   const complaint = await service.updateOwn(req.user, req.validated.params.id, req.validated.body);
   res.json({ success: true, data: { complaint: serializeComplaint(complaint) } });
+  // A text edit resets the AI to "pending", so analyze the new text
+  if (complaint.ai?.status === 'pending') startAnalysis(complaint._id);
 }
 
 export async function deleteOne(req, res) {

@@ -1,5 +1,6 @@
 import * as service from '../services/adminService.js';
 import { serializeComplaint } from '../utils/serializers.js';
+import * as aiService from '../services/aiService.js';
 
 const asAdmin = (c) => serializeComplaint(c, { admin: true });
 
@@ -33,4 +34,9 @@ export async function assignees(req, res) {
 
 export async function stats(req, res) {
   res.json({ success: true, data: { stats: await service.getStats() } });
+}
+
+export async function aiRetry(req, res) {
+  const c = await aiService.retryAnalysis(req.validated.params.id);
+  res.json({ success: true, data: { complaint: asAdmin(c) } });
 }
