@@ -6,6 +6,8 @@ import RootRedirect from './components/RootRedirect';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import StudentDashboard from './pages/StudentDashboard';
+import NewComplaint from './pages/NewComplaint';
+import ComplaintDetails from './pages/ComplaintDetails';
 import AdminHome from './pages/AdminHome';
 import NotFound from './pages/NotFound';
 
@@ -23,7 +25,15 @@ export default function App() {
           path="/dashboard"
           element={<ProtectedRoute role="student"><StudentDashboard /></ProtectedRoute>}
         />
-        <Route  
+        <Route
+          path="/complaints/new"
+          element={<ProtectedRoute role="student"><NewComplaint /></ProtectedRoute>}
+        />
+        <Route
+          path="/complaints/:id"
+          element={<ProtectedRoute role="student"><ComplaintDetails /></ProtectedRoute>}
+        />
+        <Route
           path="/admin"
           element={<ProtectedRoute role="admin"><AdminHome /></ProtectedRoute>}
         />
