@@ -19,13 +19,13 @@ export default function Navbar() {
 
   return (
     <header className="border-b border-slate-200 bg-white">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2 px-4 py-3">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-3">
         <Link to={homePathFor(user)} className="flex items-center gap-2 font-bold text-blue-700">
           <Wrench className="h-5 w-5" />
           CampusFix AI
         </Link>
 
-        <nav className="flex items-center gap-1">
+        <nav className="flex flex-wrap items-center gap-1">
           {user?.role === 'student' && (
             <>
               <NavLink to="/dashboard" className={linkClass}>
@@ -33,6 +33,16 @@ export default function Navbar() {
               </NavLink>
               <NavLink to="/complaints/new" className={linkClass}>
                 New complaint
+              </NavLink>
+            </>
+          )}
+          {user?.role === 'admin' && (
+            <>
+              <NavLink to="/admin" end className={linkClass}>
+                Dashboard
+              </NavLink>
+              <NavLink to="/admin/complaints" className={linkClass}>
+                All complaints
               </NavLink>
             </>
           )}

@@ -9,6 +9,7 @@ import StudentDashboard from './pages/StudentDashboard';
 import NewComplaint from './pages/NewComplaint';
 import ComplaintDetails from './pages/ComplaintDetails';
 import AdminHome from './pages/AdminHome';
+import AdminComplaints from './pages/AdminComplaints';
 import NotFound from './pages/NotFound';
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
 
       {/* Pages with the navigation bar */}
       <Route element={<AppLayout />}>
+        {/* Student pages */}
         <Route
           path="/dashboard"
           element={<ProtectedRoute role="student"><StudentDashboard /></ProtectedRoute>}
@@ -33,9 +35,15 @@ export default function App() {
           path="/complaints/:id"
           element={<ProtectedRoute role="student"><ComplaintDetails /></ProtectedRoute>}
         />
+
+        {/* Admin pages. The server checks the admin role again on every request. */}
         <Route
           path="/admin"
           element={<ProtectedRoute role="admin"><AdminHome /></ProtectedRoute>}
+        />
+        <Route
+          path="/admin/complaints"
+          element={<ProtectedRoute role="admin"><AdminComplaints /></ProtectedRoute>}
         />
       </Route>
 
