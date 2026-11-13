@@ -1,27 +1,35 @@
-import { useEffect, useState } from 'react'
-import api from './services/api'
+import { Routes, Route } from 'react-router-dom';
+import AppLayout from './components/AppLayout';
+import ProtectedRoute from './components/ProtectedRoute';
+import PublicOnlyRoute from './components/PublicOnlyRoute';
+import RootRedirect from './components/RootRedirect';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import StudentDashboard from './pages/StudentDashboard';
+import AdminHome from './pages/AdminHome';
+import NotFound from './pages/NotFound';
 
-function App() {
-  const [health, setHealth] = useState(null)
-  const [error, setError] = useState('')
-
-  useEffect(() => {
-    api.get('/health')
-      .then((res) => setHealth(res.data.data))
-      .catch(() => setError('Cannot reach the backend'))
-  }, [])
-
+export default function App() {
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold text-blue-600">CampusFix AI</h1>
-      {error && <p className="mt-4 text-red-600">{error}</p>}
-      {health && (
-        <p className="mt-4 text-green-700">
-          Backend: {health.status} | Database: {health.database}
-        </p>
-      )}
-    </div>
-  )
-}
+    <Routes>
+      <Route path="/" element={<RootRedirect />} />
 
-export default App
+      <Route path="/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
+      <Route path="/register" element={<PublicOnlyRoute><Register /></PublicOnlyRoute>} />
+
+      {/* Pages with the navigation bar */}
+      <Route element={<AppLayout />}>
+        <Route
+          path="/dashboard"
+          element={<ProtectedRoute role="student"><StudentDashboard /></ProtectedRoute>}
+        />
+        <Route  
+          path="/admin"
+          element={<ProtectedRoute role="admin"><AdminHome /></ProtectedRoute>}
+        />
+      </Route>
+
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+}
